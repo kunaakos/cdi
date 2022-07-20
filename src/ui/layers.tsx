@@ -28,3 +28,14 @@ export const Overlay = styled.div`
     padding: ${CARD_GAP * 2}px;
     box-sizing: border-box;
 `
+
+export const StatusTab = styled.div`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    /* quick and dirty styles */
+    color: ${COLORS.highlight};
+    background: ${COLORS.brand};
+    padding: ${CARD_GAP}px;
+    box-sizing: border-box;
+`

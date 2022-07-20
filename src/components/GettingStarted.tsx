@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { clamp, debounce, range } from 'lodash'
 
-import { MAX_CARDS_IN_ONE_ROW, MIN_CARDS_IN_ONE_ROW } from '../util/config'
+import { MAX_CARDS_IN_ONE_ROW, MAX_PLAYER_COUNT, MIN_CARDS_IN_ONE_ROW, MIN_PLAYER_COUNT } from '../util/config'
 import { calculateGridSize, getViewportSize } from '../util/layout'
-import { roundDownToEven } from '../util/misc'
+import { isPlural, roundDownToEven } from '../util/misc'
 import { GettingStartedGameState, GridSize } from '../types/types'
 
 import { GameAction } from '../hooks/useGameState'
@@ -23,6 +23,11 @@ type GettingStartedProps = {
 
 export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStartedProps) => {
     const [gridSize, setGridSize] = useState<GridSize>(calculateGridSize(getViewportSize()))
+    const [playerCount, setPlayerCount] = useState<number>(1)
+
+    const playerCountMaxed = playerCount >= MAX_PLAYER_COUNT
+    const playerCountMinimal = playerCount <= MIN_PLAYER_COUNT
+
     const [cardCountOffset, setCardCountOffset] = useState<number>(0)
 
     // this callback is used to recalculate grid size after a window resize
@@ -59,9 +64,19 @@ export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStarted
         [cardCountOffset],
     )
 
+    const adjustPlayerCount = useCallback(
+        (amount: number) => () => {
+            const newPlayerCount = clamp(playerCount + amount, MIN_PLAYER_COUNT, MAX_PLAYER_COUNT)
+            if (newPlayerCount === playerCount) return
+            setPlayerCount(newPlayerCount)
+        },
+        [playerCount],
+    )
+
     const goClickHandler = () => {
         dispatchGameAction({
             type: 'GenerateCardsAsyncAction',
+            players: range(1, playerCount + 1).map((playerNumber) => `Player ${playerNumber}`),
             board: {
                 type: 'Board',
                 gridSize,
@@ -97,7 +112,25 @@ export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStarted
                             cards without changing the size of the page.
                         </p>
                         <p>
-                            If you're happy with the card layout,{' '}
+                            The game is currently set to {playerCount} {isPlural(playerCount) ? 'players' : 'player'}.
+                            You can have{' '}
+                            {!playerCountMinimal && (
+                                <>
+                                    <a href="#" onClick={adjustPlayerCount(-1)}>
+                                        less
+                                    </a>
+                                </>
+                            )}
+                            {!(playerCountMaxed || playerCountMinimal) && <> or </>}
+                            {!playerCountMaxed && (
+                                <a href="#" onClick={adjustPlayerCount(1)}>
+                                    more
+                                </a>
+                            )}
+                            .
+                        </p>
+                        <p>
+                            If you're happy with the card layout and the number of players, you can{' '}
                             <a href="#" onClick={goClickHandler}>
                                 start matching cats
                             </a>

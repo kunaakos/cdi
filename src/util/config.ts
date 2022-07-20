@@ -13,3 +13,6 @@ export const COLORS = {
     textLight: '#FAFAFA',
     highlight: `#87E510`,
 }
+
+export const MAX_PLAYER_COUNT = 4
+export const MIN_PLAYER_COUNT = 4

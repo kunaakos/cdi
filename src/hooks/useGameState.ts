@@ -1,12 +1,13 @@
 import { Reducer } from 'react'
 import { AsyncActionHandlers, useReducerAsync } from 'use-reducer-async'
 
-import { Board, Card, GameState, Id, PlayingGameState } from '../types/types'
+import { Board, Card, GameState, Id, Player } from '../types/types'
 import {
     areTwoCardsFlipped,
     doFlippedCardsMatch,
     flipCardOpen,
-    removeMatchingCardsAndFinishIfNeeded,
+    removeMatchingCards,
+    selectNextPlayerorFinishGame,
     unflipAllCards,
 } from '../util/game'
 import { generateCards } from '../util/generators'
@@ -26,6 +27,7 @@ type SyncGameAction =
           type: 'StartGameAction'
           board: Board
           cards: Card[]
+          players: Player[]
       }
     | {
           type: 'SetGameStateAction'
@@ -39,6 +41,7 @@ type AsyncGameAction =
     | {
           type: 'GenerateCardsAsyncAction'
           board: Board
+          players: Player[]
       }
     | {
           type: 'FlipCardAsyncAction'
@@ -54,6 +57,9 @@ const gameStateReducer = (gameState: GameState, gameAction: SyncGameAction): Gam
                 cards: gameAction.cards,
                 flippedCardIds: [],
                 foundCatIds: [],
+                players: gameAction.players,
+                matchCount: gameAction.players.map((_) => 0),
+                currentPlayer: 0,
             }
         case 'SetGameStateAction':
             // TODO: wouldn't it be nice to validate here
@@ -87,6 +93,7 @@ const asyncGameActionHandlers: AsyncActionHandlers<Reducer<GameState, SyncGameAc
                     type: 'StartGameAction',
                     board: gameAction.board,
                     cards: await generateCards(numberOfCardsThatFit(gameAction.board.gridSize)),
+                    players: gameAction.players,
                 })
             } catch (error) {
                 // TODO: check how use-reducer-async handles errors and integrate with app error handling
@@ -124,13 +131,13 @@ const asyncGameActionHandlers: AsyncActionHandlers<Reducer<GameState, SyncGameAc
                 // YES! add the cat id to the list of cats that were already found
                 dispatch({
                     type: 'SetGameStateAction',
-                    state: removeMatchingCardsAndFinishIfNeeded(nextState),
+                    state: selectNextPlayerorFinishGame(removeMatchingCards(nextState)),
                 })
             } else {
                 // NO :( remember to flip cards back
                 dispatch({
                     type: 'SetGameStateAction',
-                    state: unflipAllCards(nextState),
+                    state: selectNextPlayerorFinishGame(unflipAllCards(nextState)),
                 })
             }
         },

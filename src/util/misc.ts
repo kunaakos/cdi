@@ -13,3 +13,5 @@ export const wait = async (delay: number) => {
 }
 
 export const allTheSame = (array: any[]): boolean => array.every((element) => element === array[0])
+
+export const isPlural = (amount: number): boolean => !(Math.abs(amount) === 1)

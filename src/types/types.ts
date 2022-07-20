@@ -44,7 +44,11 @@ type GamePlayState = {
     cards: Card[]
     foundCatIds: Id[]
     flippedCardIds: Id[]
+    players: Player[]
+    matchCount: number[]
+    currentPlayer: number
 }
+
 export type PlayingGameState = GamePlayState & {
     type: 'PlayingGameState'
 }
@@ -73,6 +77,9 @@ export type RectangleSize = {
     height: number
 }
 
+// for the sake of simplicity we'll store player names only and reference players
+// by the index of the array they're stored in.
+export type Player = string
 
 /**
  * That's all!

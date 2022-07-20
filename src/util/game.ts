@@ -1,5 +1,5 @@
 import { find } from 'lodash'
-import { Card, Cat, FinishedGameState, PlayingGameState } from '../types/types'
+import { Card, Cat, FinishedGameState, Player, PlayingGameState } from '../types/types'
 import { allTheSame } from './misc'
 
 const getCatIdFrom =
@@ -36,6 +36,9 @@ export const doFlippedCardsMatch = (gameState: PlayingGameState): boolean => {
 
 export const isGameComplete = (gameState: PlayingGameState): boolean => gameState.cards.every(isCardSolved(gameState))
 
+export const isMultiplayerGame = (gameState: PlayingGameState | FinishedGameState): boolean =>
+    gameState.players.length > 1
+
 /**
  * Below you will find actions that change the game state:
  */
@@ -50,18 +53,35 @@ export const unflipAllCards = (gameState: PlayingGameState): PlayingGameState =>
     flippedCardIds: [],
 })
 
-const finishGame = (gameState: PlayingGameState): FinishedGameState => ({
+export const finishGame = (gameState: PlayingGameState): FinishedGameState => ({
     ...gameState,
     type: 'FinishedGameState',
 })
 
-export const removeMatchingCardsAndFinishIfNeeded = (
-    prevState: PlayingGameState,
-): PlayingGameState | FinishedGameState => {
+const incrementMatchCountForPlayer = (playerIndex: number, matchCount: number[]) => {
+    const newMatchCount = [...matchCount]
+    newMatchCount[playerIndex] = matchCount[playerIndex] + 1
+    return newMatchCount
+}
+
+export const removeMatchingCards = (prevState: PlayingGameState): PlayingGameState => ({
+    ...prevState,
+    foundCatIds: [...prevState.foundCatIds, getCatIdFrom(prevState.cards)(prevState.flippedCardIds[0])],
+    matchCount: incrementMatchCountForPlayer(prevState.currentPlayer, prevState.matchCount),
+    flippedCardIds: [],
+})
+
+export const selectNextPlayerorFinishGame = (prevState: PlayingGameState): PlayingGameState | FinishedGameState => {
     const nextState = {
         ...prevState,
-        foundCatIds: [...prevState.foundCatIds, getCatIdFrom(prevState.cards)(prevState.flippedCardIds[0])],
-        flippedCardIds: [],
+        currentPlayer: prevState.currentPlayer >= prevState.players.length - 1 ? 0 : prevState.currentPlayer + 1,
     }
     return isGameComplete(nextState) ? finishGame(nextState) : nextState
 }
+
+/**
+ * And some game related helper functions:
+ */
+
+export const getResults = (gameState: PlayingGameState | FinishedGameState): [Player, number][] =>
+    gameState.players.map((playerName, playerIndex) => [playerName, gameState.matchCount[playerIndex]])
