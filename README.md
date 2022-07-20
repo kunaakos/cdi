@@ -2,6 +2,8 @@
 
 A cat memory game written in [TypeScript](https://www.typescriptlang.org/) using [React](https://reactjs.org/) as a view library and [Emotion](https://emotion.sh/) for styling. State management was done with React builtins, and with a little help from [use-reducer-async](https://www.npmjs.com/package/use-reducer-async).
 
+Check it out [live](https://kunaakos.github.io/cdi)!
+
 I spent waaaay too much time figuring out how to do the resizeable board, and code quality has suffered as a result - styling and view components were quickly hacked together, and I did not use emotion theming either.
 
 What could urgently use more work:
@@ -13,6 +15,8 @@ What could urgently use more work:
 But my main focus was the resizable board, and I sacrificed everything else, including code quality in some places!
 
 I used [Prettier](https://prettier.io/) for formatting, and I'm not always happy about what it does to JSX, but I favor consistency over perfectly formatted code. 
+
+I did not write tests, but made sure everything is testable.
 # Running
 
 This project was built with [Create React App](https://github.com/facebook/create-react-app).
