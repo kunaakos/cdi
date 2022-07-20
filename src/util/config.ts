@@ -15,4 +15,4 @@ export const COLORS = {
 }
 
 export const MAX_PLAYER_COUNT = 4
-export const MIN_PLAYER_COUNT = 4
+export const MIN_PLAYER_COUNT = 1
