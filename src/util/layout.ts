@@ -25,7 +25,6 @@ export const fitGridIntoWrapper = (gridSize: GridSize, wrapperSize: RectangleSiz
 export const getViewportSize = (): RectangleSize => ({ height: window.innerHeight, width: window.innerWidth })
 
 const isPortrait = ({ width, height }: RectangleSize): boolean => height >= width
-const isLandscape = ({ width, height }: RectangleSize): boolean => height < width
 
 const aspectRatioOf = ({ width, height }: RectangleSize): number => width / height
 

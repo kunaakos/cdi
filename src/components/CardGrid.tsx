@@ -1,5 +1,4 @@
 import styled from '@emotion/styled/macro'
-import { Children } from 'react'
 import useElementSize from '../hooks/useElementSize'
 import { GridSize, RectangleSize } from '../types/types'
 import { CARD_GAP } from '../util/config'

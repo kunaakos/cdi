@@ -12,6 +12,7 @@ import { BlankCard } from './BlankCard'
 import { CardGrid, CardSlot } from './CardGrid'
 import { Container } from '../ui/Container'
 import { Layer, Layers, Overlay } from '../ui/layers'
+import { InlineButton } from '../ui/InlineButton'
 
 type GettingStartedProps = {
     gameState: GettingStartedGameState
@@ -31,6 +32,7 @@ export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStarted
     const [cardCountOffset, setCardCountOffset] = useState<number>(0)
 
     // this callback is used to recalculate grid size after a window resize
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const recalculateGridSize = useCallback(
         // lodash.debounce was used so we don't trigger waaay to many rerenders,
         // and we'll stop recalculating once the game started loading
@@ -102,13 +104,13 @@ export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStarted
                         <p>Resize (or zoom) this page to change card layout.</p>
                         <p>
                             You can also ask for{' '}
-                            <a href="#" onClick={adjustCardCountOffset(+1)}>
+                            <InlineButton href="#" onClick={adjustCardCountOffset(+1)}>
                                 more
-                            </a>{' '}
+                            </InlineButton>{' '}
                             or{' '}
-                            <a href="#" onClick={adjustCardCountOffset(-1)}>
+                            <InlineButton href="#" onClick={adjustCardCountOffset(-1)}>
                                 less
-                            </a>{' '}
+                            </InlineButton>{' '}
                             cards without changing the size of the page.
                         </p>
                         <p>
@@ -116,24 +118,24 @@ export const GettingStarted = ({ gameState, dispatchGameAction }: GettingStarted
                             You can have{' '}
                             {!playerCountMinimal && (
                                 <>
-                                    <a href="#" onClick={adjustPlayerCount(-1)}>
+                                    <InlineButton href="#" onClick={adjustPlayerCount(-1)}>
                                         less
-                                    </a>
+                                    </InlineButton>
                                 </>
                             )}
                             {!(playerCountMaxed || playerCountMinimal) && <> or </>}
                             {!playerCountMaxed && (
-                                <a href="#" onClick={adjustPlayerCount(1)}>
+                                <InlineButton href="#" onClick={adjustPlayerCount(1)}>
                                     more
-                                </a>
+                                </InlineButton>
                             )}
                             .
                         </p>
                         <p>
                             If you're happy with the card layout and the number of players, you can{' '}
-                            <a href="#" onClick={goClickHandler}>
+                            <InlineButton href="#" onClick={goClickHandler}>
                                 start matching cats
-                            </a>
+                            </InlineButton>
                             !
                         </p>
                     </Container>

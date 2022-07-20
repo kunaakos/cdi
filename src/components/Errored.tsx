@@ -6,7 +6,7 @@ type ErroredProps = {
     gameState: ErroredGameState
 }
 
-export const Errored = ({}: ErroredProps) => {
+export const Errored = ({ gameState }: ErroredProps) => {
     return (
         <Container>
             <h1>Oh noes!</h1>

@@ -5,6 +5,7 @@ import { getResults, isMultiplayerGame } from '../util/game'
 import { GameAction } from '../hooks/useGameState'
 
 import { Container } from '../ui/Container'
+import { InlineButton } from '../ui/InlineButton'
 
 type FinishedProps = {
     gameState: FinishedGameState
@@ -27,9 +28,9 @@ export const Finished = ({ gameState, dispatchGameAction }: FinishedProps) => {
                 <p>Great job, team, you found all the cats! {generateResultsString(gameState)}. Excellent.</p>
             )}
             <p>
-                <a href="#" onClick={restartClickHandler}>
+                <InlineButton href="#" onClick={restartClickHandler}>
                     Have another go
-                </a>
+                </InlineButton>
                 , if you'd like!
             </p>
         </Container>
